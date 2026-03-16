@@ -65,7 +65,7 @@ def obter_curva_b3_limpa():
 
 def gerar_curva_60_meses_b3(df_curva_b3):
     if df_curva_b3 is None or df_curva_b3.empty:
-        return np.array([0.1050] * 60)
+        return np.array([0.1490] * 60)
     m, t = df_curva_b3['mes'].values, df_curva_b3['taxa'].values
     if len(m) < 2:
         return np.array([t[0] if len(t) > 0 else 0.1050] * 60)
@@ -249,7 +249,7 @@ class MotorPricerAnalitico:
 # INTERFACE DO STREAMLIT
 # ==========================================
 st.set_page_config(page_title="Pricer de Crédito B2B/B2C", layout="wide")
-st.title("📊 Calculadora Dinâmica (Dias Exatos)")
+st.title("📊 Operações Estruturadas CS")
 
 with st.spinner('Puxando curva de juros ao vivo da B3...'):
     df_b3 = obter_curva_b3_limpa()
@@ -271,20 +271,20 @@ with st.expander("📈 Visualizar Curva de Juros (DI B3)"):
         # A tabela ajusta-se para ocupar o ecrã com uma formatação muito profissional
         st.dataframe(df_b3_display.style.format({'Taxa a.a.': "{:.2f}%"}), use_container_width=True, hide_index=True)
     else:
-        st.warning("⚠️ **Aviso:** A API da B3 não respondeu. O sistema utilizou uma curva padrão de segurança de 10.50% a.a.")
+        st.warning("⚠️ **Aviso:** A API da B3 não respondeu. O sistema utilizou uma curva padrão de segurança de 14.90% a.a.")
 
 # ==========================================
 # RESTO DA INTERFACE
 # ==========================================
-DICT_PD = {'A (Baixo Risco)': 0.005, 'B (Risco Médio)': 0.018, 'C (Risco Alto)': 0.042, 'D (Risco Crítico)': 0.084}
+DICT_PD = {'A (Baixo Risco)': 0.005, 'B (Risco Médio)': 0.018, 'C (Risco Alto)': 0.042, 'D (Risco Crítico)': 0.11}
 
 st.sidebar.header("🛠️ Produto e Datas Exatas")
 preset = st.sidebar.selectbox("Escolha um Produto Base", ["BNPL Digital", "Antecipação Duplicatas", "Nota Comercial", "Customizado"])
 
 is_isento_iof = False
-if preset == "BNPL Digital":
+if preset == "BNPL":
     default_fluxo = 0 # PRICE
-    default_lgd = 85
+    default_lgd = 67
     default_parcelas = 12
     default_financiado = True 
 elif preset == "Antecipação Duplicatas":
@@ -294,7 +294,7 @@ elif preset == "Antecipação Duplicatas":
     default_financiado = False 
 elif preset == "Nota Comercial":
     default_fluxo = 3 # BULLET
-    default_lgd = 65
+    default_lgd = 67
     default_parcelas = 1
     default_financiado = False
     is_isento_iof = True 
